@@ -1,24 +1,6 @@
-const { Router } = require("express");
-const { get, unhandledCase } = require("../controllers");
+const routes = {};
 
-const router = Router();
+routes.healthz = require("./healthz");
+routes.user = require("./user");
 
-router.use((req, res, next) => {
-  const contentLength = req.get("Content-Length");
-  const isRequestPayloadEmpty = !contentLength || parseInt(contentLength) == 0;
-  const containsQueryParams = Object.keys(req.query).length != 0;
-
-  if (!isRequestPayloadEmpty || containsQueryParams) {
-    return res.status(400).end();
-  }
-
-  next();
-});
-
-router.head("/healthz", unhandledCase);
-
-router.get("/healthz", get);
-
-router.all("/*", unhandledCase);
-
-module.exports = { router };
+module.exports = routes;
