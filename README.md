@@ -1,4 +1,4 @@
-# Commands
+# Command
 
 **1) Initialize npm**
 
