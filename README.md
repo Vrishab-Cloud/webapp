@@ -4,40 +4,47 @@
 
 **2) Install required package**
 
-    npm i -D nodemon
-
     npm i express dotenv body-parser
+     
+    npm i bcrypt joi uuid 
 
     npm i sequelize mysql2
 
+    npm i -D jest supertest
+    
+    npm i -D nodemon
+    
     npm i -D sequelize-cli
 
-(Note: `sequelize-cli` generates files and folders. Also run npx sequelize-cli init) 
+(Note: The command `npm ci` can be used to install all the dependencies listed in the package.json)
 
-**4) Add neccessary files to the project (.env and .gitignore)**
+**3) Add .env file to the project**
 
-(Note: Create variables in .env file)
+    DB_NAME=<database_name>
+    DB_USER=<database_user>
+    DB_PASS=<database_password>
+    
+    TEST_DB_NAME=<test_database_name>
+    TEST_DB_USER=<test_database_user>
+    TEST_DB_PASS=<test_database_password>
 
-**5) Change config.json to config.js** 
 
-config.js has connection setup for different phase
-Export the module and use the .env variables.
+(Note: Create these variables in .env file)
 
-Also change the path in model/index.js using this file
-
-**6) Update your package.json file and add start command under script**
+**4) The package.json file contains few scripts**
 
     "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
+      "test": "jest",
       "start": "node index.js",
       "dev": "nodemon index.js"
     },
-
-**7) Create Node, express server, routes, and controllers**
-
 
 # Reference
 
 [Express](https://expressjs.com/en/4x/api)
 
 [Sequelize](https://sequelize.org/docs/v6/)
+
+[Jest](https://jestjs.io/docs/getting-started)
+
+[SuperTest](https://www.npmjs.com/package/supertest)
