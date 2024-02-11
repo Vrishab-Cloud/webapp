@@ -11,7 +11,7 @@ const db = {};
 
 let sequelize;
 
-const checkDatabaseCreation = async () => {
+const init = async () => {
   let connection;
   try {
     const { host, port, username: user, password, database } = config;
@@ -36,6 +36,10 @@ sequelize = new Sequelize(
   config.password,
   config
 );
+
+const close = async () => {
+  await sequelize.close();
+};
 
 fs.readdirSync(__dirname)
   .filter((file) => {
@@ -62,6 +66,7 @@ Object.keys(db).forEach((modelName) => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-db.checkDatabaseCreation = checkDatabaseCreation;
+db.init = init;
+db.close = close;
 
-module.exports = { db };
+module.exports = db;
