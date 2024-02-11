@@ -25,6 +25,10 @@ jobs:
           node-version: '21.x'
       - name: Install Test Dependency
         run: npm i -g -D jest
-      - run: npm ci
+      - run: npm ci 
+      - env: 
+          DB_NAME: healthz
+          DB_USER: healthz_admin
+          DB_PASS: Admin@HEA7THZ
       - run: npm test
       - run: echo Hello, World!
