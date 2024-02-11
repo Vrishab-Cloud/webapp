@@ -1,4 +1,3 @@
-"use strict";
 const { Model, UUIDV4 } = require("sequelize");
 const { bcryptPassword, comparePassword } = require("../utils");
 module.exports = (sequelize, DataTypes) => {
@@ -42,7 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
           isEmail: true,
         },
@@ -55,6 +53,12 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       createdAt: "account_created",
       updatedAt: "account_updated",
+      indexes: [
+        {
+          unique: true,
+          fields: ["username"],
+        },
+      ],
       hooks: {
         beforeCreate: async (user) => {
           user.password = await bcryptPassword(user.password);

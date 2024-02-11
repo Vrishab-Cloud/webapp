@@ -1,4 +1,4 @@
-const { db } = require("../models");
+const db = require("../models");
 const { validateSignup, validateUpdate } = require("./schemas");
 
 module.exports = {
