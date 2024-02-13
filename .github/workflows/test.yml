@@ -10,8 +10,8 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_DATABASE: test_db
-          MYSQL_USER: admin
-          MYSQL_PASSWORD: Admin@TEST
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_ROOT_PASSWORD: rootpassword
         ports:
           - 3306:3306
@@ -24,8 +24,8 @@ jobs:
         run: |
           touch .env
           echo TEST_DB_NAME=test_db >> .env
-          echo TEST_DB_USER=admin >> .env
-          echo TEST_DB_PASS=Admin@TEST >> .env
+          echo TEST_DB_USER=${{ secrets.MYSQL_USER }}>> .env
+          echo TEST_DB_PASS=${{ secrets.MYSQL_PASSWORD }} >> .env
           
       - name: Use Node.js
         uses: actions/setup-node@v3
