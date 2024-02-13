@@ -3,21 +3,22 @@ const { Router } = require("express");
 const router = Router();
 const { user, unhandledCase } = require("../controllers");
 const { basicAuth, notAuth } = require("../middlewares/user");
-const { blockQueryParam, dbErrorHandler } = require("../middlewares");
+const {
+  blockQueryParam,
+  dbErrorHandler,
+  blockPayload,
+} = require("../middlewares");
 
 router.use(blockQueryParam);
 
-router
-  .route("/")
-  .post(notAuth, user.post)
-  .head(notAuth, unhandledCase)
-  .all(notAuth, unhandledCase);
+router.all("/", notAuth);
+router.all("/self", basicAuth);
 
-router.use(basicAuth);
+router.route("/").post(user.post).head(unhandledCase).all(unhandledCase);
 
 router
   .route("/self")
-  .get(user.get)
+  .get(blockPayload, user.get)
   .put(user.put)
   .head(unhandledCase)
   .all(unhandledCase);
