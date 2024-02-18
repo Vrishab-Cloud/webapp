@@ -20,3 +20,29 @@ source "googlecompute" "centos" {
   image_name          = "${var.image_name}-${local.timestamp}"
   machine_type        = var.machine_type
 }
+
+build {
+  sources = ["source.googlecompute.centos"]
+  provisioner "shell" {
+    scripts = ["./scripts/updall.sh", "./scripts/user.sh"]
+  }
+
+  provisioner "file" {
+    source      = "app.tar.gz"
+    destination = "/tmp/app.tar.gz"
+  }
+
+  provisioner "file" {
+    source      = ".env"
+    destination = "/tmp/.env"
+  }
+
+  provisioner "file" {
+    source      = "webapp.service"
+    destination = "/tmp/webapp.service"
+  }
+
+  provisioner "shell" {
+    scripts = ["./scripts/mvcure.sh", "./scripts/build.sh"]
+  }
+}
