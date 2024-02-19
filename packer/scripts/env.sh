@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Create .env file
 touch /tmp/.env
 
 echo "TEST_DB_NAME=$TEST_DB_NAME" >> /tmp/.env
