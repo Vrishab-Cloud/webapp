@@ -8,10 +8,24 @@ jobs:
     defaults:
       run:
         working-directory: packer
-    
     steps:
       - name: Checkout the Source Code
         uses: "actions/checkout@v3"
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.x'
+
+      - name: Install Dependencies
+        working-directory: ./app
+        run: | 
+          npm i -g -D jest
+          npm ci
+
+      - name: Archive the application
+        working-directory: app
+        run : tar czf $GITHUB_WORKSPACE/packer/app.tar.gz .
 
       - name: Authentication with GCP
 
@@ -25,20 +39,14 @@ jobs:
         with:
           version: "latest"
 
-      - name: Run `packer init`
+      - name: Init Packer
         id: init
         run: "packer init $GITHUB_WORKSPACE/packer/."
 
-      - name: Run `packer validate`
+      - name: Validate Packer files
         id: validate
         run: "packer validate -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"env_db_user=${{ secrets.DB_USER }}\" -var \"env_prod_db=${{ secrets.PROD_DB }}\" -var \"env_db_pass=${{ secrets.DB_PASS }}\" $GITHUB_WORKSPACE/packer/. "
 
-      - name: Run `packer build`
+      - name: Build Machine Image
         id: build
         run: "packer build -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"env_db_user=${{ secrets.DB_USER }}\" -var \"env_prod_db=${{ secrets.PROD_DB }}\" -var \"env_db_pass=${{ secrets.DB_PASS }}\" $GITHUB_WORKSPACE/packer/. "
-        
-               
-
-      
-
-  
