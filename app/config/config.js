@@ -18,10 +18,11 @@ module.exports = {
     port: "3306",
   },
   production: {
-    username: "root",
-    password: null,
-    database: "database_production",
+    username: process.env.PROD_DB_USER,
+    password: process.env.PROD_DB_PASS,
+    database: process.env.PROD_DB_NAME,
     host: "127.0.0.1",
     dialect: "mysql",
+    port: "3306",
   },
 };
