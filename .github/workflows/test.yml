@@ -33,7 +33,7 @@ jobs:
           node-version: '21.x'
 
       - name: Run npm Install
-        run: npm ci
+        run: npm i
 
       - name: Install Test Dependencies
         run: npm i -g -D jest supertest
