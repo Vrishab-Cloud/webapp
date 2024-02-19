@@ -17,7 +17,7 @@ source "googlecompute" "centos" {
   source_image_family = var.image_family
   ssh_username        = var.ssh_username
   zone                = var.zone
-  image_name          = "${var.image_name}-1"
+  image_name          = "${var.image_name}-${local.timestamp}"
   machine_type        = var.machine_type
 }
 
