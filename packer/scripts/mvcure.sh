@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Need to create directory since the tar doesn't create a /app
-sudo mkdir /opt/webapp/app
-sudo tar -xzf /tmp/app.tar.gz -C /opt/webapp/app
-
 #Move
+sudo mv /tmp/app /opt/webapp
 sudo mv /tmp/.env /opt/webapp/app/.env
 sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service
 
