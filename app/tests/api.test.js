@@ -20,7 +20,7 @@ test("Test 1 - Create an account and Validate using Get", async () => {
     .send(userBody)
     .set("Accept", "application/json")
     .expect("Cache-Control", /no-store, no-cache, must-revalidate/)
-    .expect(201);
+    .expect(200);
 
   delete postRes.body.account_created;
   delete postRes.body.account_updated;
@@ -50,7 +50,7 @@ test("Test 2 - Update an account and Validate using Get", async () => {
     .send(updatedUserBody)
     .set("Accept", "application/json")
     .expect("Cache-Control", /no-store, no-cache, must-revalidate/)
-    .expect(204);
+    .expect(200);
 
   const getRes = await request(app)
     .get("/v1/user/self")
