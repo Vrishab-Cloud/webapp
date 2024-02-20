@@ -9,24 +9,6 @@ jobs:
       run:
         working-directory: packer
     steps:
-      - name: Checkout the Source Code
-        uses: "actions/checkout@v3"
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21.x'
-
-      - name: Install Dependencies
-        working-directory: ./app
-        run: | 
-          npm i -g -D jest
-          npm ci
-
-      - name: Archive the application
-        working-directory: app
-        run : tar czf $GITHUB_WORKSPACE/packer/app.tar.gz .
-
       - name: Authentication with GCP
 
         uses: "google-github-actions/auth@v1"

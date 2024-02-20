@@ -28,8 +28,8 @@ build {
   }
 
   provisioner "file" {
-    source      = "app.tar.gz"
-    destination = "/tmp/app.tar.gz"
+     source      = "../app"
+    destination = "/tmp"
   }
 
   provisioner "file" {
