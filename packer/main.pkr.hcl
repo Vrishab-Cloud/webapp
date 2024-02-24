@@ -19,6 +19,7 @@ source "googlecompute" "centos" {
   zone                = var.zone
   image_name          = "${var.image_name}-${local.timestamp}"
   machine_type        = var.machine_type
+}
 
 build {
   sources = ["source.googlecompute.centos"]
