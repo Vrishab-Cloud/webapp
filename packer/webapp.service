@@ -1,8 +1,6 @@
 [Unit]
 Description=Webapp Server
 ConditionPathExists=/opt/webapp/app/.env
-Requires=mysqld.service
-After=mysqld.service
 After=multi-user.target
 
 [Service]
