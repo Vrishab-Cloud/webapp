@@ -37,17 +37,8 @@ build {
     destination = "/tmp/webapp.service"
   }
 
-  provisioner "shell" {
-    script = "./scripts/env.sh"
-    environment_vars = [
-      "TEST_DB_NAME=${var.env_test_db}",
-      "DB_USER=${var.env_db_user}",
-      "DB_PASS=${var.env_db_pass}",
-      "PROD_DB_NAME=${var.env_prod_db}",
-    ]
-  }
 
   provisioner "shell" {
-    scripts = ["./scripts/mvcure.sh", "./scripts/test.sh"]
+    scripts = ["./scripts/mvcure.sh", "./scripts/build.sh"]
   }
 }
