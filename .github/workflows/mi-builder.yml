@@ -30,8 +30,8 @@ jobs:
 
       - name: Validate Packer files
         id: validate
-        run: "packer validate -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"env_db_user=${{ secrets.DB_USER }}\" -var \"env_prod_db=${{ secrets.PROD_DB }}\" -var \"env_db_pass=${{ secrets.DB_PASS }}\" $GITHUB_WORKSPACE/packer/. "
+        run: "packer validate -var \"project_id=${{ secrets.PROJECT_ID }}\" $GITHUB_WORKSPACE/packer/. "
 
       - name: Build Machine Image
         id: build
-        run: "packer build -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"env_db_user=${{ secrets.DB_USER }}\" -var \"env_prod_db=${{ secrets.PROD_DB }}\" -var \"env_db_pass=${{ secrets.DB_PASS }}\" $GITHUB_WORKSPACE/packer/. "
+        run: "packer build -var \"project_id=${{ secrets.PROJECT_ID }}\" $GITHUB_WORKSPACE/packer/. "
