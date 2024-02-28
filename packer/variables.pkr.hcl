@@ -26,21 +26,3 @@ variable "ssh_username" {
   type    = string
   default = "packer"
 }
-
-variable "env_test_db" {
-  type    = string
-  default = "test_db"
-}
-
-variable "env_prod_db" {
-  type = string
-}
-
-variable "env_db_user" {
-  type = string
-}
-
-variable "env_db_pass" {
-  type    = string
-  default = ""
-}
