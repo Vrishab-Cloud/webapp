@@ -9,19 +9,12 @@ jobs:
       run:
         working-directory: app
 
-    env:
-      DB_DATABASE: test_db
-      DB_USER: ${{ secrets.MYSQL_USER }}
-      DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
       - name: Start MySQL
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
+        run: sudo systemctl start mysql.service
 
       - name: Create env file
         run: |
