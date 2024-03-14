@@ -2,18 +2,18 @@ name: Node.js CI
 
 on: [pull_request]
 
+env:
+  DB_DATABASE: test_db
+  DB_USER: ${{ secrets.MYSQL_USER }}
+  DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
 jobs:
   server-api:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: app
-
-    env:
-      DB_DATABASE: test_db
-      DB_USER: ${{ secrets.MYSQL_USER }}
-      DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-
+        
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,6 +33,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '21.x'
+          cache: npm
 
       - name: Run npm Install
         run: npm ci
