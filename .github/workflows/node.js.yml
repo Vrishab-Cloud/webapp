@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '21.x'
+          cache: npm
       - name: Install Test Dependency
         run: npm i -g -D jest
       - run: npm ci
