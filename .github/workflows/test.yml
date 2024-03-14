@@ -8,20 +8,19 @@ jobs:
     defaults:
       run:
         working-directory: app
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: rootpassword
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    env:
+      DB_DATABASE: test_db
+      DB_USER: ${{ secrets.MYSQL_USER }}
+      DB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      
+      - name: Start MySQL
+        run: |
+          sudo /etc/init.d/mysql start
 
       - name: Create env file
         run: |
