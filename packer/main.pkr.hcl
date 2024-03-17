@@ -39,6 +39,6 @@ build {
 
 
   provisioner "shell" {
-    scripts = ["./scripts/mvcure.sh", "./scripts/build.sh"]
+    scripts = ["./scripts/mvcure.sh", "./scripts/build.sh", "./scripts/ops-agent.sh"]
   }
 }
