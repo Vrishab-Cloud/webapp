@@ -32,6 +32,10 @@ build {
     destination = "/tmp/webapp.service"
   }
 
+  provisioner "file" {
+    source      = "/tmp/app.tar.gz"
+    destination = "/tmp/app.tar.gz"
+  }
 
   provisioner "shell" {
     scripts = ["./scripts/mvcure.sh", "./scripts/build.sh", "./scripts/ops-agent.sh"]
