@@ -26,7 +26,7 @@ build {
   provisioner "shell" {
     scripts = ["./scripts/updall.sh", "./scripts/user.sh"]
   }
-  
+
   provisioner "file" {
     source      = "webapp.service"
     destination = "/tmp/webapp.service"
