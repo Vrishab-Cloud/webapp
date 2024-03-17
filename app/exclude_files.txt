@@ -1,3 +1,0 @@
-README.md
-.gitignore
-exclude_files.txt

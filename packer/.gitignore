@@ -18,8 +18,5 @@ crash.log
 # Ignore any google credentials 
 dev-*.json
 
-#Ignore .tar.gz file
-*.tar.gz
-
 #Ignore custom build script
 packer-build.sh

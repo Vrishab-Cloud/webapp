@@ -24,10 +24,6 @@ jobs:
         with:
           version: "latest"
 
-      - name: Archive the application
-        working-directory: app
-        run : tar -zcf /tmp/app.tar.gz -X $GITHUB_WORKSPACE/app/exclude_files.txt $GITHUB_WORKSPACE/app
-
       - name: Init Packer
         id: init
         run: "packer init $GITHUB_WORKSPACE/packer/."
