@@ -33,8 +33,8 @@ build {
   }
 
   provisioner "file" {
-    source      = "/tmp/app.tar.gz"
-    destination = "/tmp/app.tar.gz"
+    source      = "../app"
+    destination = "/tmp"
   }
 
   provisioner "shell" {
