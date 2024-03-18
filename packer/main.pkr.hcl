@@ -33,6 +33,11 @@ build {
   }
 
   provisioner "file" {
+    source      = "config.yaml"
+    destination = "/tmp/config.yaml"
+  }
+
+  provisioner "file" {
     source      = "../app"
     destination = "/tmp"
   }
