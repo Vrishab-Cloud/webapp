@@ -7,14 +7,6 @@ const { combine, timestamp, json } = format;
 
 let logger;
 
-const console = new transports.Console({
-  format: format.printf((log) => {
-    return `${log.timestamp} - ${log.level.toUpperCase()}: ${log.message}`;
-  }),
-});
-
-const files = new transports.File({ filename: "/var/log/app.log" });
-
 const createTheLogger = () => {
   logger = createLogger({
     level: "debug",
@@ -22,8 +14,14 @@ const createTheLogger = () => {
   });
 
   if (process.env.NODE_ENV !== "production") {
+    const console = new transports.Console({
+      format: format.printf((log) => {
+        return `${log.timestamp} - ${log.level.toUpperCase()}: ${log.message}`;
+      }),
+    });
     logger.add(console);
   } else {
+    const files = new transports.File({ filename: "/var/log/webapp/app.log" });
     logger.add(files);
   }
 };
