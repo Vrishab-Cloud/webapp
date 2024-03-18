@@ -1,6 +1,8 @@
 const app = require("./app");
 const db = require("./models");
 
+const logger = require("./utils").getLogger();
+
 const port = process.env.PORT || 3000;
 
 db.init().then(() => {
@@ -8,10 +10,10 @@ db.init().then(() => {
     .sync({ alter: true })
     .then(() => {
       app.listen(port, () => {
-        console.log(`Application is listening on ${port}`);
+        logger.info(`Application is listening on ${port}`);
       });
     })
     .catch((error) => {
-      console.error("Unable to connect to database \n", error.stack);
+      logger.error("Unable to connect to database \n", error.message);
     });
 });

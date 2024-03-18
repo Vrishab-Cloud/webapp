@@ -1,3 +1,5 @@
+const logger = require("../utils").getLogger();
+
 module.exports = {
   cacheController: (req, res, next) => {
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
@@ -30,17 +32,17 @@ module.exports = {
     if (err instanceof SyntaxError) {
       return res.status(400).end();
     }
-    console.error("Error Handler: ", err);
+    logger.error("Error Handler: ", err.message);
     return res.status(503).end();
   },
 
   dbErrorHandler: (err, req, res, next) => {
     switch (err.name) {
       case "SequelizeConnectionRefusedError":
-        console.error("DB Connectivity Issue: ", err);
+        logger.error("DB Connectivity Issue: ", err.message);
         return res.status(503).end();
       case "SequelizeUniqueConstraintError":
-        console.error("Username is not unique", err);
+        logger.warn("Username is not unique", err.message);
         return res.status(400).end();
       default:
         next(err);

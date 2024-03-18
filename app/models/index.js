@@ -6,6 +6,7 @@ const mysql = require("mysql2/promise");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.js")[env];
+const logger = require("../utils").getLogger();
 
 const db = {};
 
@@ -22,20 +23,18 @@ const init = async () => {
       password,
     });
     await connection.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
-    console.log("MYSQL Database has been created / updated : ", database);
+    logger.info("MYSQL Database has been created / updated : ", database);
   } catch (error) {
-    console.error("Error while creating database: ", error.message);
+    logger.error("Error while creating database: ", error.message);
   } finally {
     if (connection) await connection.close();
   }
 };
 
-sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config
-);
+sequelize = new Sequelize(config.database, config.username, config.password, {
+  ...config,
+  logging: false,
+});
 
 const close = async () => {
   await sequelize.close();
