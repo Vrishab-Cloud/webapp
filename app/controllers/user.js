@@ -1,4 +1,5 @@
 const db = require("../models");
+const logger = require("../utils").getLogger();
 const { validateSignup, validateUpdate } = require("./schemas");
 
 module.exports = {
@@ -22,7 +23,7 @@ module.exports = {
       });
 
       delete user.dataValues.password;
-
+      logger.info("User Created: " + user.username);
       return res.status(201).json(user);
     } catch (error) {
       next(error);
@@ -40,6 +41,8 @@ module.exports = {
           username: req.user.username,
         },
       });
+
+      logger.info("User Updated: " + req.user.username);
       return res.status(204).end();
     } catch (err) {
       next(err);
