@@ -5,15 +5,19 @@ const logger = require("./utils").getLogger();
 
 const port = process.env.PORT || 3000;
 
-db.init().then(() => {
-  db.sequelize
-    .sync({ alter: true })
-    .then(() => {
-      app.listen(port, () => {
-        logger.info(`Application is listening on ${port}`);
+db.init()
+  .then(() => {
+    db.sequelize
+      .sync({ alter: true })
+      .then(() => {
+        app.listen(port, () => {
+          logger.info(`Application is listening on ${port}`);
+        });
+      })
+      .catch((error) => {
+        logger.error("Unable to connect to database: ", error);
       });
-    })
-    .catch((error) => {
-      logger.error("Unable to connect to database \n", error.message);
-    });
-});
+  })
+  .catch((error) => {
+    logger.error("Error while creating database: ", error);
+  });

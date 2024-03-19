@@ -1,7 +1,8 @@
 [Unit]
 Description=Webapp Server
 ConditionPathExists=/opt/webapp/app/.env
-After=network.target
+Wants=network-online.target
+After=network.target network-online.target
 
 [Service]
 ExecStart=/usr/bin/node /opt/webapp/app/index.js

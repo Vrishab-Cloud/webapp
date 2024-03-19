@@ -32,17 +32,17 @@ module.exports = {
     if (err instanceof SyntaxError) {
       return res.status(400).end();
     }
-    logger.error("Error Handler: ", err.message);
+    logger.error("Error Handler: ", err);
     return res.status(503).end();
   },
 
   dbErrorHandler: (err, req, res, next) => {
     switch (err.name) {
       case "SequelizeConnectionRefusedError":
-        logger.error("DB Connectivity Issue: ", err.message);
+        logger.error("DB Connectivity Issue: ", err);
         return res.status(503).end();
       case "SequelizeUniqueConstraintError":
-        logger.warn("Username is not unique", err.message);
+        logger.warn("Username is not unique: ", err);
         return res.status(400).end();
       default:
         next(err);
