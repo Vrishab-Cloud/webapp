@@ -1,5 +1,6 @@
 const db = require("../models");
-const logger = require("../utils").getLogger();
+const { publisher } = require("../utils");
+const { logger } = require("../utils");
 const { validateSignup, validateUpdate } = require("./schemas");
 
 module.exports = {
@@ -24,6 +25,12 @@ module.exports = {
 
       delete user.dataValues.password;
       logger.info("User Created: " + user.username);
+      const payload = {
+        token: "as2xadf89",
+        email: user.username,
+      };
+      await publisher.publishMessage(payload);
+
       return res.status(201).json(user);
     } catch (error) {
       next(error);

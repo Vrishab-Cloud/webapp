@@ -1,5 +1,5 @@
 const { Model, UUIDV4 } = require("sequelize");
-const { bcryptPassword, comparePassword } = require("../utils");
+const { bcrypt } = require("../utils");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     async validatePassword(password) {
-      return await comparePassword(password, this.password);
+      return await bcrypt.comparePassword(password, this.password);
     }
   }
   User.init(
@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
       ],
       hooks: {
         beforeCreate: async (user) => {
-          user.password = await bcryptPassword(user.password);
+          user.password = await bcrypt.bcryptPassword(user.password);
         },
         beforeUpdate: async (user) => {
           /**
@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
            *  Note: cant do user.password check to check the above condition
            **/
           if (user.changed("password"))
-            user.password = await bcryptPassword(user.password);
+            user.password = await bcrypt.bcryptPassword(user.password);
         },
       },
     }

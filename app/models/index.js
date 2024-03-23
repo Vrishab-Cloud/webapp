@@ -6,7 +6,7 @@ const mysql = require("mysql2/promise");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.js")[env];
-const logger = require("../utils").getLogger();
+const { logger } = require("../utils");
 
 const db = {};
 

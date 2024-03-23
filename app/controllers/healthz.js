@@ -1,5 +1,5 @@
 const db = require("../models");
-const logger = require("../utils").getLogger();
+const { logger } = require("../utils");
 
 module.exports = {
   get: async (req, res, next) => {
