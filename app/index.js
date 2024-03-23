@@ -1,7 +1,7 @@
 const app = require("./app");
 const db = require("./models");
 
-const logger = require("./utils").getLogger();
+const { logger } = require("./utils");
 
 const port = process.env.PORT || 3000;
 

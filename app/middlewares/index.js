@@ -1,4 +1,4 @@
-const logger = require("../utils").getLogger();
+const { logger } = require("../utils");
 
 module.exports = {
   cacheController: (req, res, next) => {
