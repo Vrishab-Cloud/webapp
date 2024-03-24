@@ -26,7 +26,7 @@ module.exports = {
 
       if (process.env.NODE_ENV == "test") {
         user.update({
-          isVerified: true,
+          isEmailVerified: true,
         });
       } else {
         user.update({
