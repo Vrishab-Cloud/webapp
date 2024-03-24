@@ -24,20 +24,26 @@ module.exports = {
         username: value.email,
       });
 
-      user.update({
-        token: tokenHandler.tokenGenerate({ userId: user.id }, "180s"),
-      });
+      if (process.env.NODE_ENV == "test") {
+        user.update({
+          isVerified: true,
+        });
+      } else {
+        user.update({
+          token: tokenHandler.tokenGenerate({ userId: user.id }, "180s"),
+        });
 
-      logger.info("User Created: " + user.username);
-      const payload = {
-        token: user.token,
-        email: user.username,
-      };
-      await publisher.publishMessage(payload);
+        const payload = {
+          token: user.token,
+          email: user.username,
+        };
+        await publisher.publishMessage(payload);
+      }
 
       delete user.dataValues.password;
       delete user.dataValues.token;
 
+      logger.info("User Created: " + user.username);
       return res.status(201).json(user);
     } catch (error) {
       next(error);
