@@ -10,7 +10,7 @@ const {
 } = require("../middlewares");
 
 router.all("/verify", notAuth);
-router.route("/verify").get(user.verify);
+router.route("/verify").get(user.verify).all(unhandledCase);
 
 router.use(blockQueryParam);
 
@@ -23,8 +23,7 @@ router
   .route("/self")
   .get(blockPayload, user.get)
   .put(user.put)
-  .head(unhandledCase)
-  .all(unhandledCase);
+  .head(unhandledCase);
 
 router.use(dbErrorHandler);
 

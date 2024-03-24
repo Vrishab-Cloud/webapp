@@ -76,7 +76,7 @@ module.exports = {
       const decodedToken = tokenHandler.verifyToken(token);
       const user = await db.User.findByPk(decodedToken.userId);
 
-      await user.update({ isVerified: true, token: null });
+      await user.update({ isEmailVerified: true, token: null });
       res.status(200).end();
     } catch (err) {
       logger.debug(err.message);
