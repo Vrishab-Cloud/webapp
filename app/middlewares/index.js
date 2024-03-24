@@ -32,6 +32,11 @@ module.exports = {
     if (err instanceof SyntaxError) {
       return res.status(400).end();
     }
+    switch (err.name) {
+      case "TokenExpiredError":
+        logger.debug("TokenExpiredError: ", err);
+        return res.status(400).end();
+    }
     logger.error("Error Handler: ", err);
     return res.status(503).end();
   },

@@ -9,6 +9,9 @@ const {
   blockPayload,
 } = require("../middlewares");
 
+router.all("/verify", notAuth);
+router.route("/verify").get(user.verify);
+
 router.use(blockQueryParam);
 
 router.all("/", notAuth);

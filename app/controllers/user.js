@@ -1,6 +1,7 @@
 const db = require("../models");
 const { publisher } = require("../utils");
 const { logger } = require("../utils");
+const { tokenHandler } = require("../utils");
 const { validateSignup, validateUpdate } = require("./schemas");
 
 module.exports = {
@@ -26,7 +27,7 @@ module.exports = {
       delete user.dataValues.password;
       logger.info("User Created: " + user.username);
       const payload = {
-        token: "as2xadf89",
+        token: tokenHandler.tokenGenerate({ userId: user.id }, "120"),
         email: user.username,
       };
       await publisher.publishMessage(payload);
@@ -52,6 +53,20 @@ module.exports = {
       logger.info("User Updated: " + req.user.username);
       return res.status(204).end();
     } catch (err) {
+      next(err);
+    }
+  },
+  verify: async (req, res, next) => {
+    const token = req.query.token;
+
+    if (token == null) return res.status(400).end();
+    try {
+      const decodedToken = tokenHandler.verifyToken(token);
+      const user = await db.User.findByPk(decodedToken.userId);
+
+      res.status(200).end();
+    } catch (err) {
+      logger.debug(err.message);
       next(err);
     }
   },
