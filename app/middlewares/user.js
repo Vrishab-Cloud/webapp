@@ -48,7 +48,7 @@ module.exports = {
     try {
       const user = req.user;
 
-      if (!user || !user.isVerified) {
+      if (!user || !user.isEmailVerified) {
         return res.status(401).end();
       }
       next();
