@@ -24,13 +24,19 @@ module.exports = {
         username: value.email,
       });
 
-      delete user.dataValues.password;
+      user.update({
+        token: tokenHandler.tokenGenerate({ userId: user.id }, "180s"),
+      });
+
       logger.info("User Created: " + user.username);
       const payload = {
-        token: tokenHandler.tokenGenerate({ userId: user.id }, "120"),
+        token: user.token,
         email: user.username,
       };
       await publisher.publishMessage(payload);
+
+      delete user.dataValues.password;
+      delete user.dataValues.token;
 
       return res.status(201).json(user);
     } catch (error) {
@@ -64,6 +70,7 @@ module.exports = {
       const decodedToken = tokenHandler.verifyToken(token);
       const user = await db.User.findByPk(decodedToken.userId);
 
+      await user.update({ isVerified: true, token: null });
       res.status(200).end();
     } catch (err) {
       logger.debug(err.message);

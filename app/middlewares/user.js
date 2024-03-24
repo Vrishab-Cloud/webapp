@@ -27,6 +27,7 @@ module.exports = {
       }
 
       delete user.dataValues.password;
+      delete user.dataValues.token;
       req.user = user;
 
       next();
@@ -41,5 +42,18 @@ module.exports = {
     }
 
     next();
+  },
+
+  checkVerified: async (req, res, next) => {
+    try {
+      const user = req.user;
+
+      if (!user || !user.isVerified) {
+        return res.status(401).end();
+      }
+      next();
+    } catch (err) {
+      next(err);
+    }
   },
 };

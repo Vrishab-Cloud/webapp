@@ -2,7 +2,7 @@ const { Router } = require("express");
 
 const router = Router();
 const { user, unhandledCase } = require("../controllers");
-const { basicAuth, notAuth } = require("../middlewares/user");
+const { basicAuth, notAuth, checkVerified } = require("../middlewares/user");
 const {
   blockQueryParam,
   dbErrorHandler,
@@ -15,7 +15,7 @@ router.route("/verify").get(user.verify);
 router.use(blockQueryParam);
 
 router.all("/", notAuth);
-router.all("/self", basicAuth);
+router.all("/self", basicAuth, checkVerified);
 
 router.route("/").post(user.post).head(unhandledCase).all(unhandledCase);
 
