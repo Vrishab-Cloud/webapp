@@ -76,7 +76,8 @@ module.exports = {
 
       if (email == null || !email.expireAt) return res.status(400).end();
 
-      if (verifyToken(email.expireAt, "120000")) return res.status(410).end();
+      if (verifyToken(email.expireAt, process.env.EMAIL_LINK_TIMEOUT))
+        return res.status(410).end();
 
       const user = await db.User.findByPk(email.userId);
 
