@@ -1,7 +1,6 @@
 const db = require("../models");
-const { publisher } = require("../utils");
+const { publisher, verifyToken } = require("../utils");
 const { logger } = require("../utils");
-const { tokenHandler } = require("../utils");
 const { validateSignup, validateUpdate } = require("./schemas");
 
 module.exports = {
@@ -24,24 +23,23 @@ module.exports = {
         username: value.email,
       });
 
+      const email = await db.Email.create({
+        userId: user.id,
+      });
+
       if (process.env.NODE_ENV == "test") {
         user.update({
           isEmailVerified: true,
         });
       } else {
-        user.update({
-          token: tokenHandler.tokenGenerate({ userId: user.id }, "180s"),
-        });
-
         const payload = {
-          token: user.token,
+          token: email.id,
           email: user.username,
         };
         await publisher.publishMessage(payload);
       }
 
       delete user.dataValues.password;
-      delete user.dataValues.token;
 
       logger.info("User Created: " + user.username);
       return res.status(201).json(user);
@@ -73,10 +71,15 @@ module.exports = {
 
     if (token == null) return res.status(400).end();
     try {
-      const decodedToken = tokenHandler.verifyToken(token);
-      const user = await db.User.findByPk(decodedToken.userId);
+      const email = await db.Email.findByPk(token);
 
-      await user.update({ isEmailVerified: true, token: null });
+      if (email == null || !email.expireAt) return res.status(400).end();
+
+      if (verifyToken(email.expireAt, "120000")) return res.status(410).end();
+
+      const user = db.User.findByPk(email.userId);
+
+      await user.update({ isEmailVerified: true });
       res.status(200).end();
     } catch (err) {
       logger.debug(err.message);

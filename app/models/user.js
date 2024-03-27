@@ -3,7 +3,7 @@ const { bcrypt } = require("../utils");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // define association here
+      User.hasMany(models.Email);
     }
 
     async validatePassword(password) {
@@ -44,9 +44,6 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isEmail: true,
         },
-      },
-      token: {
-        type: DataTypes.STRING,
       },
       isEmailVerified: {
         type: DataTypes.BOOLEAN,

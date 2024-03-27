@@ -4,8 +4,8 @@ const logger = require("./logger").getLogger();
 module.exports = {
   publishMessage: async (
     payload,
-    name = "dev-22983",
-    topicName = "verify_email"
+    name = process.env.GCP_PROJECT,
+    topicName = process.env.TOPIC
   ) => {
     const pubSubClient = new PubSub({ name });
 

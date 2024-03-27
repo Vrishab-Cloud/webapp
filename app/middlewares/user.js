@@ -27,7 +27,6 @@ module.exports = {
       }
 
       delete user.dataValues.password;
-      delete user.dataValues.token;
       req.user = user;
 
       next();
