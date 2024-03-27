@@ -76,7 +76,7 @@ module.exports = {
 
       if (verifyToken(email.expireAt, "120000")) return res.status(410).end();
 
-      const user = db.User.findByPk(email.userId);
+      const user = await db.User.findByPk(email.userId);
 
       await user.update({ isEmailVerified: true });
       res.status(200).end();
