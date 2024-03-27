@@ -10,7 +10,7 @@ module.exports = {
 
   post: async (req, res, next) => {
     const { error, value } = validateSignup(req.body);
-
+    const link = "v1/user/verify";
     if (error) {
       return res.status(400).end();
     }
@@ -34,6 +34,8 @@ module.exports = {
       } else {
         const payload = {
           token: email.id,
+          email: user.email,
+          link: link,
         };
         await publisher.publishMessage(payload);
       }
