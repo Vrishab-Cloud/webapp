@@ -34,7 +34,6 @@ module.exports = {
       } else {
         const payload = {
           token: email.id,
-          email: user.username,
         };
         await publisher.publishMessage(payload);
       }
