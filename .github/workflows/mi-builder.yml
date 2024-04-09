@@ -1,10 +1,12 @@
-name: MI Builder
+name: MI Builder and Deploy
 
 on: [push]
 
 jobs:
   packer-build:
     runs-on: ubuntu-latest
+    outputs:
+      image_id: ${{ steps.image.outputs.image_id }}
     defaults:
       run:
         working-directory: packer
@@ -34,4 +36,70 @@ jobs:
 
       - name: Build Machine Image
         id: build
-        run: "packer build -var \"project_id=${{ secrets.PROJECT_ID }}\" $GITHUB_WORKSPACE/packer/. "
+        run: |
+          output=$(packer build -var "project_id=${{ secrets.PROJECT_ID }}" $GITHUB_WORKSPACE/packer/. | grep -oP "A disk image was created in the .+ project: \K[^ ]+")
+          echo "image_id=$output" >> "$GITHUB_ENV"
+
+      - name: Set Output
+        id: image
+        run:
+          echo "image_id=$image_id" >> "$GITHUB_OUTPUT"
+  
+  deploy:
+    needs: packer-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Source Code
+        uses: "actions/checkout@v3"
+
+      - name: Authentication with GCP
+
+        uses: "google-github-actions/auth@v1"
+        with: 
+          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
+      - name: Create ENV
+        run: | 
+          echo template_name=webapp-template-$(date +"%Y-%m-%d-%H-%M-%S") >> "$GITHUB_ENV"
+
+      - name: Create Instance
+        run: |
+           gcloud compute instance-templates create $template_name \
+            --project=${{ secrets.PROJECT_ID }}  \
+            --description="This template is used to create vm instances." \
+            --machine-type=${{ vars.MACHINE_TYPE }} \
+            --network-interface=network-tier=STANDARD,subnet=${{ secrets.SUBNET }} \
+            --instance-template-region=${{ secrets.REGION }} \
+            --metadata=startup-script="#!/bin/bash
+
+            if [ -e \"/opt/webapp/app/.env\" ]; then
+              exit 0
+            fi
+
+            touch /tmp/.env
+
+            echo \"PROD_DB_NAME=${{ secrets.PROD_DB }}\" >> /tmp/.env
+            echo \"PROD_DB_USER=${{ secrets.DB_USER }}\" >> /tmp/.env
+            echo \"PROD_DB_PASS=${{ secrets.DB_PASS }}\" >> /tmp/.env
+            echo \"PROD_HOST=${{ secrets.DB_HOST }}\" >> /tmp/.env
+            echo \"NODE_ENV=production\" >> /tmp/.env
+            echo \"GCP_PROJECT=${{ secrets.PROJECT_ID }}\" >> /tmp/.env
+            echo \"TOPIC=${{ secrets.TOPIC }}\" >> /tmp/.env
+            echo \"EMAIL_LINK_TIMEOUT=120000\" >> /tmp/.env
+
+            mv /tmp/.env /opt/webapp/app
+            chown csye6225:csye6225 /opt/webapp/app/.env
+
+            systemctl start webapp
+            systemctl restart google-cloud-ops-agent" \
+            --maintenance-policy=MIGRATE \
+            --provisioning-model=STANDARD \
+            --service-account=${{ secrets.SERVICE_ACCOUNT }} \
+            --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/pubsub,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/trace.append \
+            --region=${{ secrets.REGION }} \
+            --tags=${{ vars.FIREWALL_TAGS }} \
+            --create-disk=auto-delete=yes,boot=yes,device-name=persistent-disk-0,image=projects/${{ secrets.PROJECT_ID }}/global/images/${{ needs.packer-build.outputs.image_id }},kms-key=projects/${{ secrets.PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.RING_NAME }}/cryptoKeys/${{ secrets.VM_KEY }},mode=rw,size=20,type=pd-standard \
+            --no-shielded-secure-boot \
+            --no-shielded-vtpm \
+            --no-shielded-integrity-monitoring \
+            --reservation-affinity=any
