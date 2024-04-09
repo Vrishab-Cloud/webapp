@@ -62,7 +62,7 @@ jobs:
         run: | 
           echo template_name=webapp-template-$(date +"%Y-%m-%d-%H-%M-%S") >> "$GITHUB_ENV"
 
-      - name: Create Instance
+      - name: Create Instance Template
         run: |
            gcloud compute instance-templates create $template_name \
             --project=${{ secrets.PROJECT_ID }}  \
@@ -103,3 +103,16 @@ jobs:
             --no-shielded-vtpm \
             --no-shielded-integrity-monitoring \
             --reservation-affinity=any
+            
+      - name: Update Instance Manager
+        run: |
+          gcloud compute instance-groups managed rolling-action start-update ${{ secrets.MANAGER }} \
+          --project=${{ secrets.PROJECT_ID }} --type='proactive' --max-surge=${{ vars.MAX_SURGE }} --max-unavailable=${{ vars.MAX_UNAVAILABLE}} \
+          --min-ready=${{ vars.MIN_READY }} --minimal-action='replace' --most-disruptive-allowed-action='replace' --replacement-method='substitute' \
+          --version=template=projects/${{ secrets.PROJECT_ID }}/regions/${{ secrets.REGION }}/instanceTemplates/"$template_name" --region=${{ secrets.REGION }}
+
+      - name: Check Group Manager Status
+        run: |
+            gcloud compute instance-groups managed wait-until ${{ secrets.MANAGER }} \
+              --version-target-reached \
+              --region=${{ secrets.REGION }}
