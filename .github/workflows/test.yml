@@ -20,8 +20,8 @@ jobs:
         run: |
           touch .env
           echo TEST_DB_NAME=test_db >> .env
-          echo TEST_DB_USER=${{ secrets.MYSQL_USER }}>> .env
-          echo TEST_DB_PASS=${{ secrets.MYSQL_PASSWORD }} >> .env
+          echo TEST_DB_USER=${{ secrets.MYSQL_TEST_USER }}>> .env
+          echo TEST_DB_PASS=${{ secrets.MYSQL_TEST_PASSWORD }} >> .env
           
       - name: Use Node.js
         uses: actions/setup-node@v3
