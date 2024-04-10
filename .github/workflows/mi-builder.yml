@@ -106,7 +106,7 @@ jobs:
             
       - name: Update Instance Manager
         run: |
-          gcloud compute instance-groups managed rolling-action start-update ${{ secrets.MANAGER }} \
+          gcloud beta compute instance-groups managed rolling-action start-update ${{ secrets.MANAGER }} \
           --project=${{ secrets.PROJECT_ID }} --type='proactive' --max-surge=${{ vars.MAX_SURGE }} --max-unavailable=${{ vars.MAX_UNAVAILABLE}} \
           --min-ready=${{ vars.MIN_READY }} --minimal-action='replace' --most-disruptive-allowed-action='replace' --replacement-method='substitute' \
           --version=template=projects/${{ secrets.PROJECT_ID }}/regions/${{ secrets.REGION }}/instanceTemplates/"$template_name" --region=${{ secrets.REGION }}
