@@ -37,12 +37,15 @@ jobs:
       - name: Build Machine Image
         id: build
         run: |
-          output=$(packer build -var "project_id=${{ secrets.PROJECT_ID }}" $GITHUB_WORKSPACE/packer/. | grep -oP "A disk image was created in the .+ project: \K[^ ]+")
-          echo "image_id=$output" >> "$GITHUB_ENV"
+          packer build -var "project_id=${{ secrets.PROJECT_ID }}" $GITHUB_WORKSPACE/packer/. 
 
       - name: Set Output
         id: image
-        run:
+        run: |
+          image_id=$(gcloud asset search-all-resources --scope='projects/${{ secrets.PROJECT_ID }}' \
+          --query='name:centos*' --order-by='createTime desc' \
+          --asset-types='compute.googleapis.com/Image' --format='value(displayName)' --limit=1)
+
           echo "image_id=$image_id" >> "$GITHUB_OUTPUT"
   
   deploy:
