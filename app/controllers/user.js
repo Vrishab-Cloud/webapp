@@ -10,7 +10,7 @@ module.exports = {
 
   post: async (req, res, next) => {
     const { error, value } = validateSignup(req.body);
-    const link = "v1/user/verify";
+    const link = "v4/user/verify";
     if (error) {
       return res.status(400).end();
     }
