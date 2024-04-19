@@ -22,7 +22,9 @@ const init = async () => {
       user,
       password,
     });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
+    await connection.query(
+      `IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = '${dbName}') CREATE DATABASE [${dbName}];`
+    );
     logger.info(`MYSQL Database has been created / updated: ${database}`);
   } finally {
     if (connection) await connection.close();
