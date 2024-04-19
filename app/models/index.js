@@ -10,32 +10,30 @@ const { logger } = require("../utils");
 
 const db = {};
 
-let sequelize;
-
-const init = async () => {
-  let connection;
-  try {
-    const { host, port, username: user, password, database } = config;
-    connection = await mysql.createConnection({
-      host,
-      port,
-      user,
-      password,
-    });
-    await connection.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
-    logger.info(`MYSQL Database has been created / updated: ${database}`);
-  } finally {
-    if (connection) await connection.close();
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  {
+    ...config,
+    logging: false,
   }
-};
-
-sequelize = new Sequelize(config.database, config.username, config.password, {
-  ...config,
-  logging: false,
-});
+);
 
 const close = async () => {
   await sequelize.close();
+};
+
+const init = async () => {
+  try {
+    await sequelize.query(`CREATE DATABASE IF NOT EXISTS ${config.database}`);
+    logger.info(
+      `MYSQL Database has been created / updated: ${config.database}`
+    );
+  } catch (error) {
+    await close();
+    throw error;
+  }
 };
 
 fs.readdirSync(__dirname)
