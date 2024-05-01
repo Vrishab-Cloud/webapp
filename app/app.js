@@ -17,7 +17,7 @@ app.use(cacheController);
 
 app.use("/healthz", routes.healthz);
 
-app.use("/v4/user", routes.user);
+app.use("/v1/user", routes.user);
 
 app.use("/*", async (req, res, next) => {
   return res.status(404).end();
