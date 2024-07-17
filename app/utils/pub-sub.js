@@ -20,7 +20,7 @@ module.exports = {
       return messageId;
     } catch (error) {
       logger.error(`Received error while publishing: ${error.message}`);
-      next(error);
+      throw error;
     }
   },
 };
