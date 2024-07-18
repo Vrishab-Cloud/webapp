@@ -13,6 +13,7 @@ StandardError=syslog
 SyslogIdentifier=webapp
 User=csye6225
 EnvironmentFile=/opt/webapp/app/.env
+ExecStartPre=/usr/sbin/setsebool httpd_can_network_connect 1
 
 [Install]
 WantedBy=multi-user.target
