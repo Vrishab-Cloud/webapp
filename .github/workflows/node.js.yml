@@ -17,5 +17,5 @@ jobs:
           node-version: '21.x'
       - name: Install Test Dependency
         run: npm i -g -D jest
-      - run: npm ci
+      - run: npm i
       - run: echo Hello, World!
