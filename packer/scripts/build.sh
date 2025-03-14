@@ -1,5 +1,8 @@
 #!/bin/bash
 
-USER_NAME="csye6225"
+sudo ls -al /opt/webapp
+cd /opt/webapp/app
 
-sudo -u $USER_NAME bash -c "cd /opt/webapp/app && npm i"
+sudo npm i
+
+sudo chown -R csye6225:csye6225 /opt/webapp/app
