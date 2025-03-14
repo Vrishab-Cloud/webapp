@@ -82,7 +82,7 @@ jobs:
 
             echo \"PROD_DB_NAME=${{ secrets.PROD_DB }}\" >> /tmp/.env
             echo \"PROD_DB_USER=${{ secrets.DB_USER }}\" >> /tmp/.env
-            echo PROD_DB_PASS=\"${{ secrets.DB_PASS }}\" >> /tmp/.env
+            echo \"PROD_DB_PASS=${{ secrets.DB_PASS }}\" >> /tmp/.env
             echo \"PROD_HOST=${{ secrets.DB_HOST }}\" >> /tmp/.env
             echo \"NODE_ENV=production\" >> /tmp/.env
             echo \"GCP_PROJECT=${{ secrets.PROJECT_ID }}\" >> /tmp/.env
