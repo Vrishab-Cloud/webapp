@@ -36,8 +36,7 @@ jobs:
 
       - name: Build Machine Image
         id: build
-        run: |
-          packer build -var "project_id=${{ secrets.PROJECT_ID }}" -var \"image_family=${{ secrets.IMAGE_FAMILY }}\" -var \"image_name=${{ secrets.IMAGE_NAME }}\" $GITHUB_WORKSPACE/packer/. 
+        run: "packer build -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"image_family=${{ secrets.IMAGE_FAMILY }}\" -var \"image_name=${{ secrets.IMAGE_NAME }}\" $GITHUB_WORKSPACE/packer/. "
 
       - name: Set Output
         id: image
