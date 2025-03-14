@@ -32,17 +32,17 @@ jobs:
 
       - name: Validate Packer files
         id: validate
-        run: "packer validate -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"image_family=${{ secrets.IMAGE_FAMILY }}\" -var \"image_name=${{ secrets.IMAGE_NAME }}\" $GITHUB_WORKSPACE/packer/. "
+        run: "packer validate -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"image_family=${{ vars.IMAGE_FAMILY }}\" -var \"image_name=${{ vars.IMAGE_NAME }}\" $GITHUB_WORKSPACE/packer/. "
 
       - name: Build Machine Image
         id: build
-        run: "packer build -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"image_family=${{ secrets.IMAGE_FAMILY }}\" -var \"image_name=${{ secrets.IMAGE_NAME }}\" $GITHUB_WORKSPACE/packer/. "
+        run: "packer build -var \"project_id=${{ secrets.PROJECT_ID }}\" -var \"image_family=${{ vars.IMAGE_FAMILY }}\" -var \"image_name=${{ vars.IMAGE_NAME }}\" $GITHUB_WORKSPACE/packer/. "
 
       - name: Set Output
         id: image
         run: |
           image_id=$(gcloud asset search-all-resources --scope='projects/${{ secrets.PROJECT_ID }}' \
-          --query='name:${{ secrets.IMAGE_NAME }}*' --order-by='createTime desc' \
+          --query='name:${{ vars.IMAGE_NAME }}*' --order-by='createTime desc' \
           --asset-types='compute.googleapis.com/Image' --format='value(displayName)' --limit=1)
 
           echo "image_id=$image_id" >> "$GITHUB_OUTPUT"
