@@ -11,16 +11,9 @@ module.exports = {
 
     logger.debug(payload);
     const dataBuffer = Buffer.from(JSON.stringify(payload));
+    const topic = pubSubClient.topic(topicName);
 
-    try {
-      const messageId = await pubSubClient
-        .topic(topicName)
-        .publishMessage({ data: dataBuffer });
-      logger.info(`Message ${messageId} published.`);
-      return messageId;
-    } catch (error) {
-      logger.error(`Received error while publishing: ${error.message}`);
-      next(error);
-    }
+    const messageId = await topic.publishMessage({ data: dataBuffer });
+    logger.info(`Message ${messageId} published.`);
   },
 };

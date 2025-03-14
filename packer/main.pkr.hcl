@@ -12,7 +12,7 @@ locals {
   timestamp = formatdate("YYYY-MM-DD", timestamp())
 }
 
-source "googlecompute" "centos" {
+source "googlecompute" "ubuntu" {
   project_id          = var.project_id
   source_image_family = var.image_family
   ssh_username        = var.ssh_username
@@ -22,10 +22,20 @@ source "googlecompute" "centos" {
 }
 
 build {
-  sources = ["source.googlecompute.centos"]
+  sources = ["source.googlecompute.ubuntu"]
   provisioner "shell" {
     scripts = ["./scripts/updall.sh", "./scripts/user.sh"]
   }
+
+  // SQL setup
+  # provisioner "shell" {
+  #   script = "./scripts/mysql.sh"
+  #   environment_vars = [
+  #     "DB_USERNAME=cloud",
+  #     "DB_PASSWORD=cloud@5QL",
+  #     "DB_DATABASE=webapp"
+  #   ]
+  # }
 
   provisioner "file" {
     source      = "webapp.service"
@@ -43,6 +53,6 @@ build {
   }
 
   provisioner "shell" {
-    scripts = ["./scripts/mvcure.sh", "./scripts/build.sh", "./scripts/ops-agent.sh"]
+    scripts = ["./scripts/mvup.sh", "./scripts/build.sh", "./scripts/ops-agent.sh"]
   }
 }
