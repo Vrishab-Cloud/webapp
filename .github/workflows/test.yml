@@ -1,40 +1,46 @@
-name: Node.js CI
+name: API Tests
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 
 jobs:
   server-api:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 21.x]
     defaults:
       run:
         working-directory: app
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
       - name: Start MySQL
-        run: sudo systemctl start mysql.service
+        run: |
+          sudo systemctl start mysql
+          mysql -u root -e "CREATE DATABASE IF NOT EXISTS test_db;"
+          mysql -u root -e "CREATE USER IF NOT EXISTS '${{ secrets.MYSQL_TEST_USER }}'@'localhost' IDENTIFIED BY '${{ secrets.MYSQL_TEST_PASSWORD }}';"
+          mysql -u root -e "GRANT ALL PRIVILEGES ON test_db.* TO '${{ secrets.MYSQL_TEST_USER }}'@'localhost';"
+          mysql -u root -e "FLUSH PRIVILEGES;"
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Create env file
         run: |
           touch .env
           echo TEST_DB_NAME=test_db >> .env
-          echo TEST_DB_USER=${{ secrets.MYSQL_TEST_USER }}>> .env
+          echo TEST_DB_USER=${{ secrets.MYSQL_TEST_USER }} >> .env
           echo TEST_DB_PASS=${{ secrets.MYSQL_TEST_PASSWORD }} >> .env
+          echo TEST_DB_HOST=localhost >> .env
           
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21.x'
-
-      - name: Run npm Install
+      - name: Install dependencies
         run: npm ci
 
-      - name: Install Test Dependencies
-        run: npm i -g -D jest supertest
-
-      - name: Run api test 
+      - name: Run tests
         run: npm test
