@@ -1,27 +1,35 @@
 
-name: Packer Validate
+name: Packer Validation
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 
 jobs: 
   validate:
     runs-on: ubuntu-latest
-    name: Check formatting of packer files
     defaults:
       run:
         working-directory: packer
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Packer fmt
-        run: packer fmt -check $GITHUB_WORKSPACE/packer/.
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: latest
 
-      - name: Packer Init
+      - name: HCL Format Check
+        run: packer fmt -check -diff $GITHUB_WORKSPACE/packer/.
+
+      - name: Initialize Packer
         run: packer init $GITHUB_WORKSPACE/packer/.
         
-      - name: Run `packer validate`
-        id: validate
-        run: "packer validate -var \"project_id=${{ secrets.PROJECT_ID }}\" $GITHUB_WORKSPACE/packer/. "
+      - name: Validate Packer Configuration
+        run: |
+          packer validate \
+            -var "project_id=${{ secrets.PROJECT_ID }}" \
+            -var "image_family=${{ vars.IMAGE_FAMILY }}" \
+            -var "image_name=${{ vars.IMAGE_NAME }}" \
+            $GITHUB_WORKSPACE/packer/.
