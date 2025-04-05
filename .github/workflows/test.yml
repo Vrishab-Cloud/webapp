@@ -14,10 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Start MySQL and Configure Database
+      - name: Configure MySQL
         run: |
-          sudo systemctl start mysql
-          sudo mysql -u root <<EOF
+          sudo systemctl start mysql.service
+          sudo mysql -u root -proot <<EOF
+          ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
           CREATE DATABASE IF NOT EXISTS test_db;
           CREATE USER IF NOT EXISTS '${{ secrets.MYSQL_TEST_USER }}'@'localhost' IDENTIFIED BY '${{ secrets.MYSQL_TEST_PASSWORD }}';
           GRANT ALL PRIVILEGES ON test_db.* TO '${{ secrets.MYSQL_TEST_USER }}'@'localhost';
