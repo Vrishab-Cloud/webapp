@@ -1,50 +1,81 @@
-# Command
+# Cloud Application Backend
 
-**1) Initialize npm**
+This is the core backend service for the cloud application, providing user management and API endpoints.
 
-**2) Install required package**
+## Project Structure
 
-    npm i express dotenv body-parser
-     
-    npm i bcrypt joi uuid 
+- `app.js` - Main Express application setup
+- `index.js` - Application entry point
+- `config/` - Configuration files
+- `controllers/` - Business logic
+- `models/` - Database models
+- `routes/` - API routes
+- `utils/` - Utility functions
+- `tests/` - API tests
 
-    npm i sequelize mysql2
+## Setup Instructions
 
-    npm i -D jest supertest
-    
-    npm i -D nodemon
-    
-    npm i -D sequelize-cli
+### 1. Install Dependencies
 
-(Note: The command `npm ci` can be used to install all the dependencies listed in the package.json)
+```bash
+npm ci  # Installs all dependencies from package-lock.json
+```
 
-**3) Add .env file to the project**
+Or install manually:
+```bash
+npm i express dotenv body-parser
+npm i bcrypt joi uuid 
+npm i sequelize mysql2
+npm i @google-cloud/pubsub google-auth-library winston
+npm i -D jest supertest nodemon sequelize-cli
+```
 
-    DB_NAME=<database_name>
-    DB_USER=<database_user>
-    DB_PASS=<database_password>
-    
-    TEST_DB_NAME=<test_database_name>
-    TEST_DB_USER=<test_database_user>
-    TEST_DB_PASS=<test_database_password>
+### 2. Configure Environment
 
+Create `.env` file based on `.env.example`:
 
-(Note: Create these variables in .env file)
+```bash
+DB_NAME=<database_name>
+DB_USER=<database_user>
+DB_PASS=<database_password>
+TEST_DB_NAME=<test_database_name>
+TEST_DB_USER=<test_database_user>
+TEST_DB_PASS=<test_database_password>
+GCP_PROJECT=<your-gcp-project-id>
+TOPIC=<your-pubsub-topic-name>
+JWT_SECRET=<your_jwt_secret_key>
+```
 
-**4) The package.json file contains few scripts**
+### 3. Available Scripts
 
-    "scripts": {
-      "test": "jest",
-      "start": "node index.js",
-      "dev": "nodemon index.js"
-    },
+```json
+"scripts": {
+  "test": "jest",
+  "start": "node index.js", 
+  "dev": "nodemon index.js"
+}
+```
 
-# Reference
+## API Documentation
 
-[Express](https://expressjs.com/en/4x/api)
+### User Endpoints
+- `POST /v4/user` - Create user account
+- `GET /v4/user/self` - Get user details (authenticated)
+- `PUT /v4/user/self` - Update user details (authenticated)
 
-[Sequelize](https://sequelize.org/docs/v6/)
+### Health Check
+- `GET /healthz` - Service health status
 
-[Jest](https://jestjs.io/docs/getting-started)
+## Testing
 
-[SuperTest](https://www.npmjs.com/package/supertest)
+Run tests with:
+```bash
+npm test
+```
+
+## References
+
+- [Express](https://expressjs.com/en/4x/api)
+- [Sequelize](https://sequelize.org/docs/v6/)
+- [Jest](https://jestjs.io/docs/getting-started)
+- [SuperTest](https://www.npmjs.com/package/supertest)
